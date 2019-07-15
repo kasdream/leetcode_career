@@ -32,17 +32,17 @@ map与unordered_map相比：
            for (int i = 0; i < nums.size(); ++i) {         
             m[nums[i]] = i;        
         }          
-      也可以用 m.insert(pair<int,int>(xxx,xxx))
+      也可以用 m.insert(pair<int,int>(xxx,xxx))          
 查哈希表中值为nums[i]个数： m.count[nums[i]]          
                           (用来做为数组中对应值是否存在的判断条件之一   if (m.count(t) && m[t] != i))         
 返回值(序号) m[nums[i]]     
                                            
 ## 关联式容器set
-用来存放一系列同一类数据，能快速读取存储
-详细介绍：https://www.cnblogs.com/caiyishuai/p/8646345.html
-声明： set<int> num
-寻找数字xxx： if(num.find(xxx) != num.end()){}
-插入数据xxx: num.insert(xxx)
+用来存放一系列同一类数据，能快速读取存储          
+详细介绍：https://www.cnblogs.com/caiyishuai/p/8646345.html         
+声明： set<int> num       
+寻找数字xxx： if(num.find(xxx) != num.end()){}         
+插入数据xxx: num.insert(xxx)           
                                           
 ## 相关时间复杂度
 https://blog.csdn.net/ted_cs/article/details/82881831
