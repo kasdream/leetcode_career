@@ -8,10 +8,12 @@ leetcode常用vector 与 array的区别和用法： https://www.cnblogs.com/Kern
 3：数组不提供 push——back或者其他的操作在数组中添加新元素，数组一经定义就不允许添加新元素；    
 4.一个数组不能用另一个数组初始化，也不能将一个数组赋值给另一个数组；    
 
-头文件：   
-include <vector>      
-声明：
-vector<int> num_add;
+头文件：    
+include <vector>   
+声明：     
+vector<int> num_add;       
+初始化：       
+
 
 
 # 视频基础算法:
