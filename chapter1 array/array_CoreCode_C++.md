@@ -20,7 +20,7 @@ leetcode常用vector 与 array的区别和用法： https://www.cnblogs.com/Kern
       cout << "value of v = " << *v << endl;   
       v++;   
    }    
-## 哈希表map 
+## 哈希表map  related topic-- Hast Table
 基础map介绍：https://blog.csdn.net/sevenjoin/article/details/81943864           
 哈希表查表内元素值为O(1)，可以直接输出该数在数组中的位置           
 map与unordered_map相比：          
