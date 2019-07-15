@@ -11,7 +11,14 @@ leetcode常用vector 与 array的区别和用法： https://www.cnblogs.com/Kern
 声明：    vector\<int\> vec   
 查看大小： vec.size()   
 添加数值： vec.push_back(i)   
-推出数值： vec.pop()   
+推出数值： vec.pop()    
+序号对应值： vec[i]   
+迭代取值：   
+   vector<int>::iterator v = vec.begin();   
+   while( v != vec.end()) {   
+      cout << "value of v = " << *v << endl;   
+      v++;   
+   }    
 ## 哈希表map 
 
 
