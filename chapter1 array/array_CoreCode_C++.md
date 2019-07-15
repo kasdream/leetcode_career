@@ -9,9 +9,9 @@ leetcode常用vector 与 array的区别和用法： https://www.cnblogs.com/Kern
 4.一个数组不能用另一个数组初始化，也不能将一个数组赋值给另一个数组；    
 
 头文件：    
-include <vector>   
+include \<vector>   
 声明：     
-vector<int> num_add;       
+vector\<int> num_add;       
 初始化：       
 
 
