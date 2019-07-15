@@ -27,7 +27,7 @@ map与unordered_map相比：
    map底层实现为红黑数，undered_map底层实现为哈希表，两者均不能有重复的建，均支持[]运算符           
    map与multimap相比：        
    两者底层实现均为红黑树，但是multimap支持重复的键，不支持[]运算符            
-声明： unordered_map\<int, int\> m        
+声明： unordered_map\<int, int\> m (不要写成map,不会排序)    
 赋值： 特别注意，哈希表是将对应的数组值作为序列（链表），把数组中的序列作为值         
            for (int i = 0; i < nums.size(); ++i) {         
             m[nums[i]] = i;        
