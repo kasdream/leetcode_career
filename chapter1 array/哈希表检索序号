@@ -1,0 +1,38 @@
+1. Two Sum
+Easy
+
+Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+Example:
+
+Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+
+给出target，target - 一个值，另一个值只要在数组中且不等于另一个值，既可成立。用unordermap可以让每次查找的效率为O(1)
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> res;
+        // 创建哈希表
+        unordered_map<int, int> map;
+        // 建立哈希表，复杂度o(n)
+        for (int i = 0; i < nums.size(); i++){
+            map[nums[i]] == i;
+        }
+        // 遍历数组时在哈希表中寻找目标值，总复杂度为o(n)
+        for (int i = 0; i < nums.size(); i++){
+            int order = target - nums[i];
+            if (map.count(order) && map[order] != i){
+                res.push_back(map[order]);
+                res.push_back(i);
+                break;
+            }                
+        }
+        return res;
+    }
+};
