@@ -1,0 +1,40 @@
+leetcode 238 Product of Array Except Self
+Given an array nums of n integers where n > 1,  return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+
+Example:
+
+Input:  [1,2,3,4]
+Output: [24,12,8,6]
+
+Note: Please solve it without division and in O(n).
+
+Follow up:
+Could you solve it with constant space complexity? (The output array does not count as extra space for the purpose of space complexity analysis.)
+
+每个值都有左边的值和右边的值，如果给两个数组的空间，那左边做一个，右边做一个，则提取可完成；
+如果要缩减成一个数组空间，则只算左边的数组（比如题目中是叠乘），做完后从右边开始，左叠乘数组*右边的单个叠乘记录值
+千万注意不能出现/号（如果不用左边叠成数组解决问题），否则一旦有零则无法更改
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        if (nums.size() <= 1) return nums;
+        int current = 1;
+        int temp = nums[0];
+        int mul = 1;
+        for (int i = 1; i < (nums.size()); i++){
+            mul *= nums[i];            
+        }
+        nums[0] = mul;
+        for (int i = 1; i < nums.size(); i++){
+            if (nums[i] != 0){
+            current = nums[i];
+            nums[i] = nums[i-1] * temp / nums[i];
+            temp = current;}
+            else{
+                
+            }
+        }
+        return nums;
+        
+    }
+};
