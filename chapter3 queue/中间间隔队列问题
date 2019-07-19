@@ -1,0 +1,52 @@
+621. Task Scheduler
+Medium
+
+Given a char array representing tasks CPU need to do. It contains capital letters A to Z where different letters represent different tasks. Tasks could be done without original order. Each task could be done in one interval. For each interval, CPU could finish one task or just be idle.
+
+However, there is a non-negative cooling interval n that means between two same tasks, there must be at least n intervals that CPU are doing different tasks or just be idle.
+
+You need to return the least number of intervals the CPU will take to finish all the given tasks.
+
+ 
+
+Example:
+
+Input: tasks = ["A","A","A","B","B","B"], n = 2
+Output: 8
+Explanation: A -> B -> idle -> A -> B -> idle -> A -> B.
+
+ 
+
+Note:
+
+    The number of tasks is in the range [1, 10000].
+    The integer n is in the range [0, 100].
+
+
+这是一个顺序安排问题，关键是每一个属性值出场的时间均有间隔。
+先假设极端情况，如果 tasks中的值本来就比需要排队的总时间还大，最延迟的数值比较小，而其他数值比较多，那不用暂停直接为tasks本身的大小就行了
+影响队列长度的关键，是看其中数量最多的那个出现的次数多少，比如max_appear，那结果一般来说只有（max_appear-1)*(n+1) 暂停占一个位置为n+1, 最后一个不是完整的循环所以max_appear-1
+很关键的是如果同样最大数量的值有n个，最后一次循环时就有n个值存在
+
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        if (n == 0) return tasks.size();
+        vector<int> nums (26,0);
+        for (int i = 0; i < tasks.size(); i++){
+            int temp = tasks[i] - 'A';
+            nums[temp] ++;
+        }
+        int max = 0;
+        int max_num = 1;
+        for (int i = 0; i < nums.size(); i++){
+            if (max == nums[i]) max_num++;
+            if (max < nums[i]){
+                max = nums[i];
+                max_num = 1;
+            }
+        }
+        return tasks.size() > (max-1)*(n+1)+max_num ? tasks.size():(max-1)*(n+1)+max_num;
+        
+    }
+};
