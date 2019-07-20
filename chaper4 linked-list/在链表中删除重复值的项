@@ -1,0 +1,53 @@
+82. Remove Duplicates from Sorted List II
+Medium
+
+Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+
+Example 1:
+
+Input: 1->2->3->3->4->4->5
+Output: 1->2->5
+
+Example 2:
+
+Input: 1->1->1->2->3
+Output: 2->3
+
+删除链表中的重复值（其他值）
+注意点1：可能开头就会删除，所以必须新建一个比head更早的一个节点。这时初始化要注意写 ListNode *p1 = new ListNode(0);进行初始化
+注意点2： 既然是重复值，那就有一个指针指向重复值前的值，有一个指针指向重复值后的值（如果是末尾可能是空值），才能完全删除
+注意点3： 两个节点都要更新，前面的节点更新有两种情况，比如这个值的下一个值不重复，那直接下一个，如果这个值的下一个值开始重复了，那其next指向后一个值；
+注意点4： 可能尾部全删，所以后一个节点要更新到链表后一个空值位置
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {       
+        ListNode* p1=new ListNode(0);  
+        ListNode* p2 = head;
+        p1->next = head;
+        head = p1;
+        
+        while (p2 != NULL){
+            int count = 0;
+            int temp = p2->val;
+            while (p2 != NULL && p2->val == temp){
+                p2 = p2->next;
+                count ++;
+            }
+            if (count == 1) p1 = p1->next;
+            else p1->next = p2;
+        }
+        
+            
+        return head->next;
+    }
+};
+
