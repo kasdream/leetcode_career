@@ -1,0 +1,70 @@
+142. Linked List Cycle II
+Medium
+
+Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+
+To represent a cycle in the given linked list, we use an integer pos which represents the position (0-indexed) in the linked list where tail connects to. If pos is -1, then there is no cycle in the linked list.
+
+Note: Do not modify the linked list.
+
+ 
+
+Example 1:
+
+Input: head = [3,2,0,-4], pos = 1
+Output: tail connects to node index 1
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+
+Example 2:
+
+Input: head = [1,2], pos = 0
+Output: tail connects to node index 0
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+
+Example 3:
+
+Input: head = [1], pos = -1
+Output: no cycle
+Explanation: There is no cycle in the linked list.
+
+这道题是个循环列表结构，可以直接记住特点，即如果无循环列表，返回NULL，如果有，则给一个快指针和一个慢指针，快指针一次跑两个，慢的跑一个，同时从起点出发，最终重合到一点（此时，慢的肯定还没跑完一圈）
+然后一个从起点开始出发，一个从重合点出发，步距均为1，重合点为循环的初始点
+比如第一次快慢走了X个回合， 链表长为L, 循环长R，循环前为A，慢的点进循环后跑了S距离，重合时快的点已经在循环里跑了N个圈
+A+S = X
+2X = N * R + X
+R = L - A
+所以
+A + S = N * R = (N-1)*R + L - A
+A = (N-1)*R + (L - A - S) = （N-1）*R + X
+换句话说， A是目标长度，与重合点X 差了(N-1) * R 圈
+注意几点：
+1、每次进行循环前，都要判定->next前的值是否存在， 比如我要一个 p1->next->next，就得先检查 p1->next是否为NULL,避免错误。也无需检查p1->next->next是否为NULL，否则会影响后面计算
+2、需要在第一次循环后判断整个列表是否为一个循环，如果不是则返回NULL
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *fast = head, *slow = head;
+        if (head == NULL || head->next == NULL) return NULL;
+        while (fast != NULL && fast->next != NULL){
+            fast = fast->next->next;
+            slow = slow->next;
+            if (fast == slow) break;                
+        }
+        if (fast == NULL || fast->next == NULL) return NULL;
+            
+            while(head!= slow){
+                head  =  head-> next;
+                slow  =  slow-> next;
+            }
+            return head;        
+    }
+};
