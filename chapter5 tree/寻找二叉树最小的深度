@@ -1,0 +1,44 @@
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+Note: A leaf is a node with no children.
+
+Example:
+
+Given binary tree [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+return its minimum depth = 2.
+
+观察输入TreeNode,二叉树一般会遍历左右子树作为循环条件
+返回值为int，那每次返回目前树的深度，所以最底层深度为1，每往上走一层都+1， 既return xxx+1;
+如果node为空值，则返回0，
+如果左右值均为空，则返回1，作为底层
+如果一边空一边有值，则迭代有值那一边，并+1
+如果两边都有值，那就观察哪边的更小，并+1
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(root == NULL) return 0;
+        else if(root->right == NULL && root -> left == NULL) return 1;
+        else if(root->right == NULL && root -> left != NULL) return minDepth(root->left) + 1;
+        else if(root->right != NULL && root -> left == NULL) return minDepth(root->right) + 1;
+        else return min(minDepth(root->right)+1,minDepth(root->left)+1);
+    }
+};
