@@ -1,0 +1,70 @@
+295. Find Median from Data Stream
+Hard
+
+Median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle value.
+For example,
+
+[2,3,4], the median is 3
+
+[2,3], the median is (2 + 3) / 2 = 2.5
+
+Design a data structure that supports the following two operations:
+
+    void addNum(int num) - Add a integer number from the data stream to the data structure.
+    double findMedian() - Return the median of all elements so far.
+
+要找中位数，就是要有两个结构，一个最大排列，一个最小排列，新数来了，属于最大排列<中位数<最小排列，而且最大排列与最小排列的size差不大于一
+用priority_queue来实现堆排序，最大堆是top最大，所以条件为less，越来越小。最小堆是top最小，条件是greater，越来越大
+可以用struct代替greater<int>
+如果新来的数大于最小堆top，则加入最小堆，否则加入最大堆
+之后看下哪个堆size大，把大的给一个top到另一个堆
+输出时三种情况，一样大的/2.0，注意是double输出所以一定要小数点
+哪个大输出哪个top
+
+struct cmd1 {
+  bool operator() (int x, int y){
+      return x > y;
+  }  
+};
+
+class MedianFinder {
+private:
+    priority_queue<int,vector<int>,less<int>> max_q;
+    priority_queue<int,vector<int>,cmd1> min_q;
+    
+public:
+    /** initialize your data structure here. */
+    MedianFinder() {
+        
+    }
+    
+    
+    void addNum(int num) {
+        if (min_q.empty()) min_q.push(num);
+        else{
+            if (num >= min_q.top()) min_q.push(num);
+            else max_q.push(num);
+            if (min_q.size() > max_q.size()){
+                max_q.push(min_q.top());
+                min_q.pop();
+            }
+            else if (min_q.size() < max_q.size()){
+                min_q.push(max_q.top());
+                max_q.pop();
+            }
+        }        
+    }
+    
+    double findMedian() {
+        if (min_q.size() == max_q.size()) return (min_q.top()+max_q.top())/2.0;
+        else if(min_q.size() > max_q.size()) return min_q.top();
+        else return max_q.top();
+    }
+};
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder* obj = new MedianFinder();
+ * obj->addNum(num);
+ * double param_2 = obj->findMedian();
+ */
