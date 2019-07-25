@@ -1,0 +1,116 @@
+插入堆
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+void fix_up(vector <int>& vec)
+{
+    int pos = vec.size() - 1;
+    int n_val = vec[pos];
+    int parent = (pos - 1) / 2;
+
+    while (parent >= 0 && n_val < vec[parent]){  // 有父母 且 值小于父母
+        swap(vec[parent], vec[pos]);
+        pos = parent;
+        parent = (pos - 1) / 2;
+        n_val = vec[pos];
+    }
+}
+
+void heap_insert(vector <int>& vec, int val)
+{
+    vec.push_back(val); // 1.放到尾部
+    fix_up(vec); // 2.向上调整
+}
+
+int main()
+{
+    vector <int> vec = { 1,4,8,7,30,10,15 };
+
+    heap_insert(vec, 3);
+
+    for (auto it : vec) {
+        cout << it << " ";
+    }
+
+    return 0;
+}
+
+删除堆
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+void fix_down(vector <int>& vec){
+    if (vec.empty())
+        return;
+    
+    int pos = 0;
+    int n_val = vec[pos];
+    int left = pos * 2 + 1;
+    int right = left + 1;
+
+    while (left < vec.size()){
+        int *ref;
+        int npos;
+        if (right < vec.size()) {
+            ref = &(vec[left] < vec[right] ? vec[left] :  vec[right]) ; // 跟子节点中较小节点比较.
+            npos = vec[left] < vec[right] ? left : right; //下一步的位置
+        }
+        else {
+            ref = &vec[left];
+            npos = left;
+        }
+        if (n_val > *ref) {
+            swap(vec[pos], *ref);
+        }
+        else
+            break;
+        
+        pos = npos;
+        left = pos * 2 + 1;
+        right = left + 1;
+        if(pos < vec.size())
+            n_val = vec[pos];
+    }
+}
+
+void pop(vector <int>& vec)
+{
+    cout << "pop " << vec[0] << endl;
+    vec[0] = vec[vec.size() - 1]; // 1. 把尾部的值放到头部
+    vec.pop_back();
+    fix_down(vec); // 2. 向下调整
+}
+
+int main()
+{
+    vector <int> vec = { 1,4,8,7,30,10,15 };
+
+    while (!vec.empty()){
+        pop(vec);
+    }
+
+    return 0;
+}
+
+数组堆化
+这一part要解决给出一个数组, 用这个数组构建堆的问题.
+解决了堆的插入, 删除等操作的问题, 再解决堆化的问题就比较容易了.
+有以下两种思路:
+
+
+把数组里的数一个一个取出来, 插入堆中.
+对数组里的每一个非叶子节点的数进行向下调整的操作.
+
+
+以上两种思路均可以通过上述实现的调整函数进行实现.
+注:思路2下, 最后一个非叶子节点的位置为n/2-1, 所以从n/2-1往回遍历即可.
+堆排序
+由于堆的顶部总是最小的数, 只需要每次将顶部的数取出, 然后再将堆调整为最小堆即可.
+取出一个数, 最多需要调整logN次, 有N个数需要取出
+所以堆排序的时间复杂度为NlogN.
