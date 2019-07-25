@@ -1,0 +1,70 @@
+100. Same Tree
+Easy
+
+Given two binary trees, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical and the nodes have the same value.
+
+Example 1:
+
+Input:     1         1
+          / \       / \
+         2   3     2   3
+
+        [1,2,3],   [1,2,3]
+
+Output: true
+
+Example 2:
+
+Input:     1         1
+          /           \
+         2             2
+
+        [1,2],     [1,null,2]
+
+Output: false
+
+Example 3:
+
+Input:     1         1
+          / \       / \
+         2   1     1   2
+
+        [1,2,1],   [1,1,2]
+
+Output: false
+
+这道题要求判断两树结构是否相同。
+一般涉及树的结构都需要用递归，一般递归的返回值为函数的输出值，输入值可以增加新的因素（如果要新建函数的话，否则用原函数）
+递归主要有几点：
+1、从终末条件出发，思考函数返回值情况。比如这题递归返回是与否，那到空子树时怎么返回，返回什么
+2、从递归方式出发，基本的递归都与主函数的输入相关联，比如p,q，那递归条件很可能也是左右子树
+3、在递归过程中，每次要访问节点的具体值时，都要考虑该值是否为空，需要判定
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if (p == NULL && q == NULL) return true;
+        else{
+            if (p == NULL || q == NULL) return false;
+            else{
+                if (q->val != p-> val) return false;
+                else{
+                    return (isSameTree(p->left,q->left) && isSameTree(p->right,q->right));
+                }
+            }
+        }
+    }
+};
+
+
