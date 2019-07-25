@@ -1,0 +1,61 @@
+23. Merge k Sorted Lists
+Hard
+
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+Example:
+
+Input:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+Output: 1->1->2->3->4->4->5->6
+
+首先，题目要求按从小到大一次排序，那每个链表的表头中一定有要合并的下一个最小值
+用暴力法去做，每次都遍历所有vector<ListNode*> ，如果这个vector特别大，那找最小值用sort法的效率太低，可以用priority_queue来实现最大堆
+值得注意的是这次的容器是vector<ListNode*> 而不是int，所以在建立最大堆时条件要格外在class Solution外面写个格外的struct，声明比较函数返回两个值的最大值 bool >
+注意vector<ListNode*> 中即使是 [[]]这种，lists.empty()都不为0，所以每次将lists[i]的值放入priority_queue中时都要检查lists[i]是否为空
+这里中断循环很有意思，当不断地执行出队列，再让出队列的ListNode下一个端点进队列的过程中，如果下一个端点为NULL则不进，最终肯定所有节点都会从队列里出去，所以while循环写成!q.empty()即可。
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
+struct cmp{
+     bool operator() (ListNode* x, ListNode* y){
+        return x->val > y->val;
+    }   
+    };
+
+class Solution {
+public:    
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        priority_queue<ListNode*, vector<ListNode*>, cmp> p;
+        for (int i = 0; i < lists.size(); i++){
+            if (lists[i] != NULL)
+                p.push(lists[i]);
+        }
+        ListNode* res = new ListNode(0);
+        ListNode* idx = res;
+        ListNode* tmp = NULL ;
+        while (!p.empty()){
+            tmp = p.top();
+            p.pop();
+            idx->next = tmp;
+            idx = idx -> next;
+            if (tmp->next != NULL)
+                p.push(tmp->next);
+        }
+        idx = res->next;
+        delete res;
+        return idx;        
+    }
+    
+};
