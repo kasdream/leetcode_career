@@ -1,0 +1,67 @@
+451. Sort Characters By Frequency
+Medium
+
+Given a string, sort it in decreasing order based on the frequency of characters.
+
+Example 1:
+
+Input:
+"tree"
+
+Output:
+"eert"
+
+Explanation:
+'e' appears twice while 'r' and 't' both appear once.
+So 'e' must appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.
+
+Example 2:
+
+Input:
+"cccaaa"
+
+Output:
+"cccaaa"
+
+Explanation:
+Both 'c' and 'a' appear three times, so "aaaccc" is also a valid answer.
+Note that "cacaca" is incorrect, as the same characters must be together.
+
+先判断是否为空，然后哈希读个数，再priority_queue排序，最后按pq.top输出字符串
+哈希map需要用auto迭代器， auto it : tmp
+核心也是pair, 每一个pair 可以用 p.first和p.second调用不同的两个数
+习惯在遍历pair的数组中用auto去自识别
+注意priority_queue默认就是最大堆，pair中第一个是<int>，直接按Int最大堆排序
+
+class Solution {
+    public:
+        string frequencySort(string s) 
+        {
+            string res = "";
+            int n=s.length();
+            unordered_map<char,int> tmp;
+            for(int i=0;i<n;i++)
+            {
+                tmp[s[i]]++;
+            }
+            priority_queue<pair<int,char>,vector<pair<int,char>>,cmp> que;
+            for (auto it : tmp){
+                que.push(pair<int,char>(it.second,it.first));
+            }
+            while(que.size())
+            {
+                auto itc=que.top();
+                for(int c=0;c<itc.first;++c)
+                {
+                    res+=itc.second;
+                }
+                que.pop();            
+            }
+            return res;
+        }
+    struct cmp{
+        bool operator()(pair<int, char> x, pair<int, char> y){
+            return x.first < y.first;
+        }
+    };
+    };
