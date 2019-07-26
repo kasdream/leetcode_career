@@ -35,7 +35,13 @@ map与unordered_map相比：
       也可以用 m.insert(pair<int,int>(xxx,xxx))          
 查哈希表中值为nums[i]个数： m.count[nums[i]]          
                           (用来做为数组中对应值是否存在的判断条件之一   if (m.count(t) && m[t] != i))         
-返回值(序号) m[nums[i]]     
+返回值(序号) m[nums[i]]    
+插入新数：     
+           for(int i=0;i<size;i++){       
+            if(hmap.find(s[i])!=hmap.end())hmap[s[i]]++;      
+            else hmap[s[i]] = 1;     
+        }         
+先find找寻是否为末尾，有则++ 无则赋1         
                                            
 ## 关联式容器set
 用来存放一系列同一类数据，能快速读取存储          
