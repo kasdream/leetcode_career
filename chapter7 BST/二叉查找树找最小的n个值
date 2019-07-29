@@ -1,0 +1,51 @@
+230. Kth Smallest Element in a BST
+Medium
+
+Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+
+Note:
+You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+
+Example 1:
+
+Input: root = [3,1,4,null,2], k = 1
+   3
+  / \
+ 1   4
+  \
+   2
+Output: 1
+
+Example 2:
+
+Input: root = [5,3,6,2,4,null,null,1], k = 3
+       5
+      / \
+     3   6
+    / \
+   2   4
+  /
+ 1
+Output: 3
+
+Follow up:
+What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+
+一般BST binary search tree 找第k个最大最小只需要左序遍历加计数即可
+关键是在这个循环次数要进行传递，子树减1后父数节点判断时也要更新数值
+这时候就需要用&k作为函数的输入参数，让地址指向值发生改变
+还有当循环到NULL节点时返回-1，而且不更新。如果k值》节点数，则最后结果是-1
+
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        return kthSmallestDFS(root, k);
+    }
+    int kthSmallestDFS(TreeNode* root, int &k) {
+        if (!root) return -1;
+        int val = kthSmallestDFS(root->left, k);
+        if (k == 0) return val;
+        if (--k == 0) return root->val;
+        return kthSmallestDFS(root->right, k);
+    }
+};
