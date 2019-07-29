@@ -1,0 +1,53 @@
+700. Search in a Binary Search Tree
+Easy
+
+Given the root node of a binary search tree (BST) and a value. You need to find the node in the BST that the node's value equals the given value. Return the subtree rooted with that node. If such node doesn't exist, you should return NULL.
+
+For example, 
+
+Given the tree:
+        4
+       / \
+      2   7
+     / \
+    1   3
+
+And the value to search: 2
+
+You should return this subtree:
+
+      2     
+     / \   
+    1   3
+
+In the example above, if we want to search the value 5, since there is no node with value 5, we should return NULL.
+
+Note that an empty tree is represented by NULL, therefore you would see the expected output (serialized tree format) as [], not null.
+
+要在二叉查找树中查找一个值，需要利用二叉查找树的特性，比它小的在左子树，比它大的在右子树即可
+如果遇到末尾，则当前函数返回null。因为二叉查找树已经拍好顺序，所以按照左右找法都找不到的时候返回NULL是可行的
+如果遇到值了，直接返回当前节点就好
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if (root == NULL) return NULL;
+        else{
+            if (val < root->val) return searchBST(root->left, val);
+            else if (val > root->val) return searchBST(root->right,val);            
+            else{
+                return root;
+            }
+        }
+        
+    }
+};
