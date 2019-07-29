@@ -1,0 +1,97 @@
+871. Minimum Number of Refueling Stops
+Hard
+
+A car travels from a starting position to a destination which is target miles east of the starting position.
+
+Along the way, there are gas stations.  Each station[i] represents a gas station that is station[i][0] miles east of the starting position, and has station[i][1] liters of gas.
+
+The car starts with an infinite tank of gas, which initially has startFuel liters of fuel in it.  It uses 1 liter of gas per 1 mile that it drives.
+
+When the car reaches a gas station, it may stop and refuel, transferring all the gas from the station into the car.
+
+What is the least number of refueling stops the car must make in order to reach its destination?  If it cannot reach the destination, return -1.
+
+Note that if the car reaches a gas station with 0 fuel left, the car can still refuel there.  If the car reaches the destination with 0 fuel left, it is still considered to have arrived.
+
+ 
+
+Example 1:
+
+Input: target = 1, startFuel = 1, stations = []
+Output: 0
+Explanation: We can reach the target without refueling.
+
+Example 2:
+
+Input: target = 100, startFuel = 1, stations = [[10,100]]
+Output: -1
+Explanation: We can't reach the target (or even the first gas station).
+
+Example 3:
+
+Input: target = 100, startFuel = 10, stations = [[10,60],[20,30],[30,30],[60,40]]
+Output: 2
+Explanation: 
+We start with 10 liters of fuel.
+We drive to position 10, expending 10 liters of fuel.  We refuel from 0 liters to 60 liters of gas.
+Then, we drive from position 10 to position 60 (expending 50 liters of fuel),
+and refuel from 10 liters to 50 liters of gas.  We then drive to and reach the target.
+We made 2 refueling stops along the way, so we return 2.
+
+这题可以用堆或者动态规划来解决，动态规划的效率高很多
+先说堆，在判断startFuel<target后，需要一个cur记录起始位置，然后检测从开头到油耗完中间所有过的加油站，把其中最大油的加油站选出来，再加到cur里面进行下一次循环
+如果最大堆没有值了，还没到，则break循环返回负一，到了就返回加油的次数
+
+class Solution {
+public:
+    int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {
+        if (target <= startFuel) return 0;        
+        else{
+            int cur = startFuel, step = 0, idx = 0;
+            priority_queue<vector<int>,vector<vector<int>>,cmp> max_heap;
+            while(true){
+                if (cur >= target) return step;
+                while (idx < stations.size() && cur >= stations[idx][0])
+                    max_heap.push(stations[idx++]);
+                if (max_heap.empty()) break; 
+                cur = cur + max_heap.top()[1];
+                max_heap.pop();
+                step++;
+            }
+            return -1;
+        }
+    }
+    struct cmp{
+        bool operator() (vector<int> x , vector<int> y){
+            return x[1] < y[1];
+        }
+    };
+};
+
+动态规划则是一开始建立一个stations+1的数组，全为startFuel，说明起始判断每个加油站能走多远
+然后对于每一个新的加油站，判断现在行程能不能到这个加油站，如果能到，则用max函数跟新这个加油站前所有每个加油站数的最大距离
+结束循环后遍历数组，只要大于target就立刻返回
+class Solution {
+public:
+    //方法1：动态规划
+    int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {
+        int num_station = stations.size();
+        
+        vector<long> dp(num_station+1,startFuel);// i个加油站最远可以去多远
+        
+        // 油量小于目的地
+        for(int i = 0; i< num_station && stations[i][0] < target; i++){//加油站的个数
+            for(int j = i + 1; j>= 1; j--)//使用的加油站的个数
+            {
+                if(dp[j-1] >= stations[i][0]) // 保证可以从前一个加油站到目前的加油站
+                    dp[j] = max(dp[j], dp[j-1]+ stations[i][1]);
+            }
+        }
+        for(int i =0;i<=num_station;i++)
+        {
+            if(dp[i]>=target){
+                return i;
+            }
+        }
+        return -1;
+    };
