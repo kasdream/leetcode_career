@@ -1,0 +1,95 @@
+207. Course Schedule
+Medium
+
+There are a total of n courses you have to take, labeled from 0 to n-1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+Example 1:
+
+Input: 2, [[1,0]] 
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+
+Example 2:
+
+Input: 2, [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+
+Note:
+
+    The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+    You may assume that there are no duplicate edges in the input prerequisites.
+
+问题的本质是验证是否为有序无环图，即这个图是有方向的，但不能循环，如果一旦循环，则这个环里面的元素都不能作为另一个的先制条件
+这种题有两个解法，一种是DFS，深度优先搜索，关注每个节点的出度。即遍历找点标记为依据visit过，然后迭代这个点关联的点为visit过，一旦在迭代过程中发现某个点的下一个点visit过，则说明环存在。
+已经visit过的点在时候标记为已经dfs过了，那下次搜索时就不需要再迭代这个点，直接返回true
+第二种是BFS,宽度优先搜索，关注每个节点的入度。先在建立图的过程中统计每个点有多少个入度，然后将入度为零的单独抽出来放入队列中，之后每次从队列中pop（）一个值，并根据graph从新更新所有这个值在入度表里下一值
+一旦下一个值在入度表里被减为0，则它也如队列进行循环，知道队列空为止。这时再检查一遍visit本身，如果还有某些点入度不为0，则返回false
+
+
+DFS方法
+因为涉及查找，所以图和数组都需初始化值，这里用vector<vector<int>> graph (numCourses,vector<int>(0))初始化二维数组，用vecootr<int> visit(numCourses，(0))初始化数组
+因为dfs函数中涉及对visit本身的修改，所以输入时设为 &visit
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        if (numCourses == 0 ) return true;
+        vector<vector<int>> graph (numCourses, vector<int>(0));
+        vector<int> visit (numCourses,0);
+        for (auto i : prerequisites){
+            graph[i[1]].push_back(i[0]);            
+        }
+        for (int i = 0; i < numCourses; ++i)
+            if (!DFS(graph, visit, i)) return false;
+        return true;
+    }
+    bool DFS(vector<vector<int>> &graph, vector<int> &visit, int cur){
+        if (visit[cur] == -1) return false;
+        if (visit[cur] == 1) return true;
+        visit[cur] = -1;
+        for (auto i : graph[cur]){
+            if (!DFS(graph, visit, i)) return false;
+        }
+        visit[cur] = 1;
+        return true;
+    }
+};
+
+BFS方法
+如果遍历对象是vector，则可以用auto直接取值，for(auto i : graph[temp])来遍历二维数组的第N行数组
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> indegree (numCourses,0);
+        vector<vector<int>> graph (numCourses,vector<int>(0));
+        queue<int> outdegree ;
+        for (auto i : prerequisites){
+            indegree[i[0]]++;
+            graph[i[1]].push_back(i[0]);            
+        }
+        for (int i = 0; i < indegree.size(); i++){
+            if (indegree[i] == 0) outdegree.push(i);
+        }
+        while (!outdegree.empty()){
+            int temp = outdegree.front();
+            outdegree.pop();
+            for(auto i : graph[temp]){
+                indegree[i]--;
+                if (indegree[i] == 0) outdegree.push(i);
+            }
+        }
+        for (auto i : indegree){
+            if(i != 0) return false;
+        }
+        return true;        
+    }
+};
