@@ -1,0 +1,61 @@
+148. Sort List
+Medium
+
+Sort a linked list in O(n log n) time using constant space complexity.
+
+Example 1:
+
+Input: 4->2->1->3
+Output: 1->2->3->4
+
+Example 2:
+
+Input: -1->5->3->4->0
+Output: -1->0->3->4->5
+
+这是个堆排序问题，堆排序的关键是归并排序，也就是先找到中间点，递归左右两边，再整合
+先只要head->next != NULL,只要最少有两个值，就可以进行迭代
+第二个是当只需要一个链表头的next去保存一个结果链表的位置时，用ListNode dummpy（-1），注意没有* ，赋值时写 ListNode *p = & dummy; 读值写dummy.next，会比正常节点节省很多空间
+当遇到链表末尾时，因为值为NULL,所以可以用int val1 = l1 == NULL? INT_MAX:l1->val 把剩下的所有值加入遍历过程中
+
+//题目要求：对链表进行排序
+//解题思路：归并排序，再Merge
+//归并排序的基本思想是：找到链表的中间节点，然后递归对前半部分和后半部分分别进行归并排序，最后对两个排好序的链表进行Merge
+ class Solution {
+ public:
+	 ListNode* sortList(ListNode* head) {
+		 if (head == NULL || head->next == NULL)  return head;
+ 
+		 //快慢指针找到中间节点
+		 ListNode *fast = head, *slow = head;
+		 while (fast->next != NULL && fast->next->next != NULL)
+		 {
+			 fast = fast->next->next;
+			 slow = slow->next;
+		 }
+		 //断开
+		 fast = slow;
+		 slow = slow->next;
+		 fast->next = NULL;
+ 
+		 ListNode *l1 = sortList(head); //前半段排序
+		 ListNode *l2 = sortList(slow); //后半段排序
+		 ListNode dummy(-1);
+		 for (ListNode* p = &dummy; l1 != NULL || l2 != NULL; p = p->next)
+		 {
+			 int val1 = l1 == NULL ? INT_MAX : l1->val;
+			 int val2 = l2 == NULL ? INT_MAX : l2->val;
+			 if (val1 <= val2)
+			 {
+				 p->next = l1;
+				 l1 = l1->next;
+			 }
+			 else
+			 {
+				 p->next = l2;
+				 l2 = l2->next;
+			 }
+		 }
+		 return dummy.next;
+	 }
+ };
