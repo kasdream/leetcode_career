@@ -1,0 +1,61 @@
+33. Search in Rotated Sorted Array
+Medium
+
+Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+
+(i.e., [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]).
+
+You are given a target value to search. If found in the array return its index, otherwise return -1.
+
+You may assume no duplicate exists in the array.
+
+Your algorithm's runtime complexity must be in the order of O(log n).
+
+Example 1:
+
+Input: nums = [4,5,6,7,0,1,2], target = 0
+Output: 4
+
+Example 2:
+
+Input: nums = [4,5,6,7,0,1,2], target = 3
+Output: -1
+
+左右排序问题，关键在于中间位置在最大值左边还是右边
+以nums[right]作为主要参考，比它大在左边，其余在右边
+然后如果在左边，只有目标值也在左边时，迭代左边，反之迭代右边。
+如果左值大于右值，说明不可能有匹配值，返回-1
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        if (nums.size() == 0) return -1; 
+        int res = binary_search(nums,target,0,nums.size()-1);
+        return res;
+    }
+    int binary_search (vector<int> & nums, int target, int left, int right){
+        if (left > right) return -1;
+        int min = (left + right)/2;
+        int res = 0;
+        if (nums[min] == target) return min;
+        else{
+            if (nums[min] > nums[right]){
+            if(nums[min] - target > 0 && target >= nums[left]){
+                res = binary_search(nums, target, left, min-1);
+            }
+            else{
+                res = binary_search(nums,target,min+1,right);    
+            }
+            }
+            else{
+            if(nums[min] < target && target <= nums[right]){
+                res = binary_search(nums, target, min+1, right);
+            }
+            else{
+                res = binary_search(nums,target,left,min - 1);    
+            }
+            }
+    }
+    return res;
+    }
+};
