@@ -1,0 +1,49 @@
+300. Longest Increasing Subsequence
+Medium
+
+Given an unsorted array of integers, find the length of longest increasing subsequence.
+
+Example:
+
+Input: [10,9,2,5,3,7,101,18]
+Output: 4 
+Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4. 
+
+Note:
+
+    There may be more than one LIS combination, it is only necessary for you to return the length.
+    Your algorithm should run in O(n2) complexity.
+
+Follow up: Could you improve it to O(n log n) time complexity?
+
+核心思想是对每个值，找到前面数列中最长的数组，并更新这个数组。
+需要一个数组去保存每一个值前面最长且末尾数字最小的数组。
+这时候用maxL作为数组的长度。因为后面涉及left.right查找数组。所以初始化应为1
+对nums中每一个值，由于长度值必定是单调递增（如果出现了更小的值，最大值数组会更新）
+利用这个特性，用二分法查找出保存数组长度-》数组末尾nums值，看下nums值是否小于新值
+若小于，则左边。若大于，则右边。
+这样，如果新值与目标值大，则while循环最后left将在目标值大一格位置
+将这个位置更新为Nums[i]
+同时这个最大数组长度也会+1（left刚好就是+1的位置）
+
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        if (nums.size() == 0 || nums.size() == 1) return nums.size();
+        int maxL = 1;
+        vector<int> heap (nums.size()+1, 0);
+        heap[1] = nums[0];
+        for(int i = 1; i < nums.size(); i++){
+            int left = 1;
+            int right = maxL;
+            while(left <= right){
+                int mid = (left + right) / 2;
+                if (heap[mid] < nums[i]) left = mid+1;
+                else right = mid-1;
+            }
+            heap[left] = nums[i];
+            if (left > maxL) maxL = left;
+        }
+        return maxL;
+    }
+};
